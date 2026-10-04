@@ -5,7 +5,6 @@ from pyrogram.enums import ParseMode
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from dotenv import load_dotenv
-import time
 
 # ====================== LOAD ENV ======================
 load_dotenv()
@@ -18,7 +17,7 @@ TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 app = Client(SESSION_NAME, api_id=API_ID, api_hash=API_HASH, no_updates=True)
 
 # ====================== LOGGER ======================
-from logger import log_user_connection, after_session_generation
+from logger import after_session_generation
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     welcome = """
@@ -66,7 +65,11 @@ async def handle_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("🔄 **Generating session...** (please wait 5-10 seconds)")
 
         try:
-            await app.start(phone_number=context["phone"], code=lambda: context["code"])
+            # ====================== FIXED LOGIN (VPS ke liye perfect) ======================
+            await app.send_code(context["phone"])                    # Code bhejta hai
+            await app.sign_in(context["phone"], context["code"])     # Code verify karta hai
+            # =============================================================================
+
             session_string = await app.export_session_string()
             await app.stop()
 
