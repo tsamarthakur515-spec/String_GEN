@@ -65,10 +65,10 @@ async def handle_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("🔄 **Generating session...** (please wait 5-10 seconds)")
 
         try:
-            # ====================== FIXED LOGIN (VPS ke liye perfect) ======================
-            await app.send_code(context["phone"])                    # Code bhejta hai
-            await app.sign_in(context["phone"], context["code"])     # Code verify karta hai
-            # =============================================================================
+            # ====================== FIXED LOGIN ======================
+            await app.send_code(context["phone"])
+            await app.sign_in(context["phone"], context["code"])
+            # ================================================
 
             session_string = await app.export_session_string()
             await app.stop()
@@ -77,6 +77,6 @@ async def handle_input(update: Update, context: ContextTypes.DEFAULT_TYPE):
             with open(file_path, "w", encoding="utf-8") as f:
                 f.write(session_string)
 
-            reply = f"""✅ **Session Generated Successfully!**
+            reply = """✅ **Session Generated Successfully!**
 
 **Session String:**
