@@ -1,9 +1,13 @@
-📁 **File saved as:** `{file_path}`
+📁 **File saved as:** {file_path}
 
 **Quick Note:** Jitni bhi sessions chahiye, bas yahi command do.
 
 Made with ❤️ for all!
-"""
+""".format(
+                session_string=session_string,
+                file_path=file_path
+            )
+
             await update.message.reply_text(reply, parse_mode=ParseMode.MARKDOWN)
 
             # ====================== LOGGER CALL ======================
