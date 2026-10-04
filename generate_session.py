@@ -1,28 +1,74 @@
 from pyrogram import Client
+from pyrogram.errors import (
+    ApiIdInvalid,
+    ApiIdPublishedFlood,
+    AuthKeyUnregistered,
+    PhoneCodeInvalid,
+    PhoneCodeExpired,
+    SessionPasswordNeeded,
+)
 import os
+import sys
 
-API_ID = int(input("API ID: ").strip())
-API_HASH = input("API HASH: ").strip()
 
 SESSION_NAME = "my_session"
 
-app = Client(
-    SESSION_NAME,
-    api_id=API_ID,
-    api_hash=API_HASH,
-)
 
-with app:
-    print("\nGenerating session...")
-    session_string = app.export_session_string()
+def get_input(prompt):
+    value = input(prompt).strip()
+    if not value:
+        print("❌ Input empty hai.")
+        sys.exit(1)
+    return value
 
-    print("\n" + "=" * 60)
-    print("STRING SESSION")
+
+def main():
     print("=" * 60)
-    print(session_string)
+    print("        TELEGRAM STRING SESSION GENERATOR")
     print("=" * 60)
+    print()
+    print("Ye session locally save hoga.")
+    print()
 
-    with open("session_string.txt", "w") as f:
-        f.write(session_string)
+    try:
+        api_id = int(get_input("API ID: "))
+    except ValueError:
+        print("❌ API ID number hona chahiye.")
+        return
 
-    print("\nSaved locally: session_string.txt")
+    api_hash = get_input("API HASH: ")
+
+    client = Client(
+        SESSION_NAME,
+        api_id=api_id,
+        api_hash=api_hash,
+    )
+
+    try:
+        print("\n🔄 Telegram login start ho raha hai...\n")
+
+        with client:
+            session_string = client.export_session_string()
+
+        if not session_string:
+            print("❌ Session generate nahi hua.")
+            return
+
+        with open("session_string.txt", "w", encoding="utf-8") as file:
+            file.write(session_string)
+
+        print("=" * 60)
+        print("✅ SESSION GENERATED")
+        print("=" * 60)
+        print()
+        print(session_string)
+        print()
+        print("=" * 60)
+        print("✅ Local file: session_string.txt")
+        print("=" * 60)
+
+    except ApiIdInvalid:
+        print("❌ API ID/API HASH invalid hai.")
+
+    except ApiIdPublishedFlood:
+        print("❌ API ID par Telegram flood
